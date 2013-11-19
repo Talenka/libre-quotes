@@ -21,6 +21,18 @@ class database
     }
 
     /**
+     * @param  string  $str
+     * @param  boolean $leaveSimpleQuote
+     * @return string
+     */
+    public function escapeString($str, $leaveSimpleQuote = false)
+    {
+        $str = $this->dbObject->real_escape_string($str);
+
+        return $leaveSimpleQuote ? str_replace("\\'", "'", $str) : $str;
+    }
+
+    /**
      * @param  string         $query
      * @return \mysqli_result
      */
@@ -37,19 +49,6 @@ class database
 
             return $result;
         }
-    }
-
-    /**
-     * Update database entry
-     * @param  string         $table  SQL table name.
-     * @param  string         $sets   modifications
-     * @param  string         $where  conditions
-     * @param  integer        $limits modified entries maximum
-     * @return \mysqli_result
-     */
-    public function update($table, $sets, $where, $limits = 1)
-    {
-        return $this->execute("UPDATE $table SET $sets WHERE $where LIMIT $limits");
     }
 
     /**
@@ -100,15 +99,15 @@ class database
     }
 
     /**
-     * @param  string  $str
-     * @param  boolean $leaveSimpleQuote
-     * @return string
+     * Update database entry
+     * @param  string         $table  SQL table name.
+     * @param  string         $sets   modifications
+     * @param  string         $where  conditions
+     * @param  integer        $limits maximum modified entries
+     * @return \mysqli_result
      */
-    public function escapeString($str, $leaveSimpleQuote = false)
+    public function update($table, $sets, $where, $limits = 1)
     {
-        $str = $this->dbObject->real_escape_string($str);
-
-        if ($leaveSimpleQuote) $str = str_replace("\\'", "'", $str);
-        return $str;
+        return $this->execute("UPDATE $table SET $sets WHERE $where LIMIT $limits");
     }
 }

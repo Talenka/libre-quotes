@@ -47,25 +47,6 @@ class form
      * @param  string            $attributes
      * @return \LibreQuotes\form
      */
-    public function addTextInput($name, $label, $maxlength, $value = false, $attributes = '')
-    {
-        $this->html .= '<input type=text name=' . $name .
-                       ' placeholder="' . L($label) . '" maxlength=' . $maxlength .
-                       (($value === false) ? '' : ' value="' . $value . '"') .
-                       (empty($attributes) ? '' : ' ' . $attributes) .
-                       '>';
-
-        return $this;
-    }
-
-    /**
-     * @param  string            $name
-     * @param  string            $label
-     * @param  integer           $maxlength
-     * @param  (string|false)    $value
-     * @param  string            $attributes
-     * @return \LibreQuotes\form
-     */
     public function addPasswordInput($name, $label, $maxlength, $value = false, $attributes = '')
     {
         $this->html .= '<input type=password name=' . $name .
@@ -115,6 +96,45 @@ class form
     }
 
     /**
+     * @param  string            $name
+     * @param  string            $label
+     * @param  integer           $maxlength
+     * @param  (string|false)    $value
+     * @param  string            $attributes
+     * @return \LibreQuotes\form
+     */
+    public function addTextInput($name, $label, $maxlength, $value = false, $attributes = '')
+    {
+        $this->html .= '<input type=text name=' . $name .
+                       ' placeholder="' . L($label) . '" maxlength=' . $maxlength .
+                       (($value === false) ? '' : ' value="' . $value . '"') .
+                       (empty($attributes) ? '' : ' ' . $attributes) .
+                       '>';
+
+        return $this;
+    }
+
+    /**
+     * @param  string $str
+     * @return string
+     */
+    public function blowfishDisgest($str)
+    {
+        return crypt($str, '$2a$07$' . CRYPT_SALT . '$');
+    }
+
+    /**
+     * @param  integer $i
+     * @param  integer $minimum
+     * @param  integer $maximum
+     * @return integer
+     */
+    public function clampInt($i, $minimum, $maximum)
+    {
+        return min(max($minimum, (int) $i), $maximum);
+    }
+
+    /**
      * Basic form protection against CSRF attack.
      * @return string Html code for the hidden input containing the key.
      */
@@ -123,6 +143,21 @@ class form
         return '<input type=hidden name=formKey value=' .
                base_convert(NOW + $this->term, 10, 36) . 'O' .
                $this->hashText(NOW + $this->term) . '>';
+    }
+
+    /**
+     * Return ephemeral md5 hash of a text.
+     *
+     * Ephemeral means here that the hash expires when the current user IP or
+     * browser changes.
+     *
+     * @param  string $text
+     * @return string
+     */
+    private function hashText($text)
+    {
+        return base_convert(md5($text . $_SERVER['REMOTE_ADDR'] .
+                                $_SERVER['HTTP_USER_AGENT'] . CRYPT_SALT), 16, 36);
     }
 
     /**
@@ -140,6 +175,18 @@ class form
 
             return ($expire > NOW && $this->hashText($expire) === $hash);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        global $page;
+
+        if ($page->format == 'json') return '';
+        return '<form action=' . $this->url .' method=' . $this->sendMethod . '>' .
+               $this->html . $this->generateKey() . '</form>';
     }
 
     /**
@@ -173,52 +220,5 @@ class form
 
         if (empty($text) || mb_strlen($text) < 2) $text = $defaultText;
         return $text;
-    }
-
-    /**
-     * Return ephemeral md5 hash of a text.
-     *
-     * Ephemeral means here that the hash expires when the current user IP or
-     * browser changes.
-     *
-     * @param  string $text
-     * @return string
-     */
-    private function hashText($text)
-    {
-        return base_convert(md5($text . $_SERVER['REMOTE_ADDR'] .
-                                $_SERVER['HTTP_USER_AGENT'] . CRYPT_SALT), 16, 36);
-    }
-
-    /**
-     * @return string
-     */
-    public function render()
-    {
-        global $page;
-
-        if ($page->format == 'json') return '';
-        return '<form action=' . $this->url .' method=' . $this->sendMethod . '>' .
-               $this->html . $this->generateKey() . '</form>';
-    }
-
-    /**
-     * @param  integer $i
-     * @param  integer $minimum
-     * @param  integer $maximum
-     * @return integer
-     */
-    public function clampInt($i, $minimum, $maximum)
-    {
-        return min(max($minimum, (int) $i), $maximum);
-    }
-
-    /**
-     * @param  string $str
-     * @return string
-     */
-    public function blowfishDisgest($str)
-    {
-        return crypt($str, '$2a$07$' . CRYPT_SALT . '$');
     }
 }
