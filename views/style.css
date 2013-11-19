@@ -1,0 +1,246 @@
+html, body
+{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+    background: #fff9f0;
+    color: #4f443b;
+    font-family: "helvetica neue", helvetica, arial, sans-serif;
+}
+
+header
+{
+    background-color: #e41;
+    color: white;
+}
+
+header nav > a
+{
+    padding: 3px 10px;
+    font-weight: bold;
+}
+
+header, main
+{
+    width: 100%;
+}
+
+header > div, main > div
+{
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 0 5px;
+    max-width: 800px;
+}
+
+a
+{
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #fc6b35;
+}
+
+header a:hover
+{
+    color: #000;
+}
+
+h1
+{
+    margin: 0;
+    color: #2f241b;
+}
+
+h2
+{
+    color: #3f342b;
+}
+
+q
+{
+    quotes: none;
+}
+
+q::before
+{
+    content: "“"
+}
+
+q > cite
+{
+    color: black;
+}
+
+q > cite::before
+{
+    content: "” (";
+}
+
+q > cite::after
+{
+    content: ")";
+}
+
+nav
+{
+    font-size: .9em;
+    float: right;
+    text-align: right;
+}
+
+header h1
+{
+    color: white;
+}
+
+nav > .a, nav > .a:hover
+{
+    color: white;
+    background-color: #9e9e9e;
+    background-image: linear-gradient(#777, #9e9e9e);
+    text-shadow: 0 -1px 0 black;
+}
+
+blockquote, nav > a, .notice, input, select
+{
+    display: inline-block;
+}
+
+blockquote
+{
+    background-image: linear-gradient(rgba(79, 68, 59, 0.1), rgba(79, 68, 59, 0.3));
+    margin: 5px -40px;
+    padding: 5px 40px;
+    box-shadow: inset 0 5px 5px rgba(79, 68, 59, 0.1);
+}
+
+blockquote > p
+{
+    font-size: 1.3em;
+    text-align: justify;
+}
+
+blockquote > p::before, blockquote > p::after
+{
+    font-size: 4em;
+    color: #f0e4cc;
+    text-shadow: 0 1px 2px #4f443b;
+    display: block;
+}
+
+blockquote > p::before
+{
+    content: "“";
+    float: left;
+}
+
+blockquote > p::after
+{
+    content: "”";
+    float: right;
+}
+
+blockquote > cite
+{
+    display: block;
+    clear: both;
+    float: right;
+    text-shadow: 0 1px 2px white;
+    font-size: 1.1em;
+}
+
+.notice, input, select, main nav > a
+{
+    border: 1px #ccc solid;
+    font-size: 1em;
+    line-height: 20px;
+    margin: 2px;
+    padding: 4px 8px;
+}
+
+input:focus, select:focus
+{
+    border-color: #52a8ec;
+    box-shadow: 0 2px 5px #ddd;
+}
+
+input[type=submit], select, main nav > a
+{
+    cursor: pointer;
+    background-color: #f5f5f5;
+    background-image: linear-gradient(white, #eee);
+    text-shadow: 0 1px 1px #eee;
+}
+
+input[type=submit]:hover, select:hover, main nav > a:hover
+{
+    background-image: linear-gradient(white, #ddd);
+}
+
+ul
+{
+    padding-left: 20px;
+}
+
+li
+{
+    margin: 0 0 9px;
+    clear: both;
+}
+
+.notice, input, select
+{
+    border-radius: 5px;
+}
+
+main nav > a
+{
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: 0;
+    border-left-width: 0;
+}
+
+.stick-right, main nav > a:first-child
+{
+    border-radius: 5px 0 0 5px;
+    margin-right: 0;
+    border-left-width: 1px;
+}
+
+.stick-left, main nav > a:last-child
+{
+    border-radius: 0 5px 5px 0;
+    margin-left: 0;
+    border-left: none;
+}
+
+.large
+{
+    width: 70%;
+}
+
+.success
+{
+    background: #dff0d8;
+    color: #468847;
+    border: 1px #468847 solid;
+}
+
+@media (max-width: 880px)
+{
+    blockquote
+    {
+        margin: 5px 0;
+        padding: 5px;
+    }
+}

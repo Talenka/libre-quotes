@@ -1,0 +1,6 @@
+.DS_Store
+
+*.sublime-*
+cache/
+core/config.php
+doc/

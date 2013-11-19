@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang={lang}>
+<title>{pageTitle} - {siteTitle}</title>
+
+<meta name=viewport content="width=device-width,initial-scale=1.0">
+
+<link rel=stylesheet href=s.css>
+<link rel=search type="application/opensearchdescription+xml" href=opensearch.xml title="Search {siteTitle}">
+<link rel=alternate type="application/rss+xml" title="{siteTitle} feed" href=feed>
+<link rel=icon href=favicon.png>
+
+<header>
+<div>
+<nav>{mainNavigation}</nav>
+<h1><a href=.>{siteTitle}</a></h1>
+</div>
+</header>
+
+<main>
+<div>
+{pagination}
+
+<h1>{pageTitle}</h1>
+
+{content}
+</div>
+</main>

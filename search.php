@@ -1,0 +1,61 @@
+<?php
+/**
+ * LibreQuotes / Controller / Search
+ */
+
+namespace LibreQuotes;
+
+require_once 'core/index.php';
+
+$search = new form('', 'get');
+
+$searchPhrase = empty($_GET['q']) ? URL_PARAMS : trim($_GET['q']);
+
+$searchTypes = array('all', 'authors', 'quotes', 'topics');
+
+$searchType = (empty($_GET['type']) || !in_array($_GET['type'], $searchTypes)) ?
+               'all' : $_GET['type'];
+
+$searchResults = array();
+
+if (!empty($searchPhrase)) {
+    if ($searchType == 'authors' || $searchType == 'all') {
+
+        $authorsResults = author::get('slugName LIKE "%' . form::sanitizeSlug($searchPhrase) . '%"',
+                                      ITEM_PER_PAGE, 'quotesNumber DESC');
+
+        $searchResults = array_merge($searchResults, $authorsResults);
+    }
+
+    if ($searchType == 'quotes' || $searchType == 'all') {
+
+        $quotesResults = quote::get('q.text LIKE "%' . $db->escapeString($searchPhrase) . '%"',
+                                    ITEM_PER_PAGE, 'submissionDate DESC');
+
+        $searchResults = array_merge($searchResults, $quotesResults);
+    }
+
+    if ($searchType == 'topics' || $searchType == 'all') {
+
+        $topicsResults = topic::get('slug LIKE "%' . form::sanitizeSlug($searchPhrase) . '%"',
+                                      ITEM_PER_PAGE, 'quotesNumber DESC');
+
+        $searchResults = array_merge($searchResults, $topicsResults);
+    }
+}
+
+$search->addTextInput('q', L('What are you looking for?'), 255,
+                      empty($searchPhrase) ? false : $searchPhrase,
+                      'required autofocus class="large stick-right"')
+       ->addSubmitButton(L('Search'), 'class=stick-left')
+       ->addSelect('type', '',
+                   empty($_GET['type']) ? false : $_GET['type'],
+                   array('all' => L('All'),
+                         'authors' => L('Authors'),
+                         'quotes' => L('Quote'),
+                         'topics' => L('Topics')));
+
+$page->setTitle(L('Search'))
+     ->addContent($search->render())
+     ->addList($searchResults)
+     ->render();
