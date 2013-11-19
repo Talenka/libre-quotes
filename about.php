@@ -16,9 +16,9 @@ if (!$page->renderFromCache(ONE_WEEK)) {
                       'Unless specified otherwise, quotes are in ' .
                       '<a href="https://en.wikipedia.org/wiki/Public_domain">public domain</a>. ' .
                       'We foster quotes re-use by making them available in interoperable format (rss, json). ' .
-                      SITE_TITLE . ' source code itself will be published ASAP under ' .
+                      SITE_TITLE . ' source code itself is published under ' .
                       '<a href="https://gnu.org/licenses/gpl.html">GNU/GPL</a> on ' .
-                      '<a href="https://github.com/Talenka">GitHub</a>. ' .
+                      '<a href="https://github.com/Talenka/libre-quotes/">GitHub</a>. ' .
                       '</p>')
          ->addSection(L('Who is behind'),
                       '<p>Just me, <a href="http://boudah.pl">Boudah Talenka</a>, doing this in my spare time.</p>')
