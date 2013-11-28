@@ -36,12 +36,12 @@ class error extends \Exception
 
             $where = 'In <a href="' . $githubLink . '">' . $fileName . ' at line ' . $this->line . '</a>';
 
-            $bugLink = 'https://github.com/Talenka/libre-quotes/issues/new?title=' .
+            $bugLink = 'https://github.com/Talenka/libre-quotes/issues/new?labels=bug&amp;title=' .
                        urldecode('Error: ' . $this->message) . '&amp;body=' .
                        urlencode($where .' from <a href="https://github.com/Talenka/libre-quotes/blob/master' .
                                  $_SERVER['PHP_SELF'] . '">' . $_SERVER['PHP_SELF'] . '</a>');
 
-            echo '<nav><a href="javascript:history.go(-1)">◀</a><a href="' . $bugLink . '">Report the error</a></nav>';
+            echo '<nav><a href="javascript:history.go(-1)">◀</a><a href="' . $bugLink . '" target=_blank>Report the error</a></nav>';
         }
 
         echo '<h1>', L('Oups, something wrong happen!'), '</h1>',
