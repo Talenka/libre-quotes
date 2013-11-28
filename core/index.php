@@ -5,9 +5,14 @@
 
 namespace LibreQuotes;
 
-require_once 'core/config.php';
+if (file_exists('core/config.php')) require_once 'core/config.php';
+else {
+    header('Location: install');
+    exit;
+}
 
-if (DEBUG) error_reporting(E_ALL);
+// if (DEBUG) error_reporting(E_ALL);
+ini_set('display_errors', 'off');
 
 /** @var integer Seconds per hour */
 const ONE_HOUR = 3600;
