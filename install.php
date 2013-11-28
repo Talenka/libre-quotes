@@ -5,49 +5,52 @@
 
 namespace LibreQuotes;
 
+ini_set('display_errors', 'off');
+
 if (file_exists('core/config.php')) require_once 'core/config.php';
 else require_once 'core/config.example.php';
 
 header('Content-Type: text/html; charset=utf-8');
 
 $step = 0;
+$messages = array();
 
-if (PHP_VERSION < 5 && !class_exists('mysqli')) $step = 0;
+if (PHP_VERSION >= 5 && class_exists('mysqli')) $step = 1;
 
-elseif (!file_put_contents('core/config.php', '<?php /* TEST */ ?>') ||
-        !unlink('core/config.php') ||
-        !file_put_contents('cache/test.php', '<?php /* TEST */ ?>') ||
-        !unlink('cache/test.php')) $step = 1;
+if ($step >= 1 &&
+    file_put_contents('core/test.php', '<?php /* TEST */ ?>') &&
+    unlink('core/test.php') &&
+    file_put_contents('cache/test.php', '<?php /* TEST */ ?>') &&
+    unlink('cache/test.php')) $step = 2;
 
-elseif (empty($_POST['SITE_TITLE']) ||
-        strlen($_POST['SITE_TITLE']) < 2 ||
-        strlen($_POST['SITE_TITLE']) > 50 ||
-        empty($_POST['SERVER_NAME']) ||
-        strlen($_POST['SERVER_NAME']) < 4 ||
-        strlen($_POST['SERVER_NAME']) > 255 ||
-        empty($_POST['SQL_HOST']) ||
-        strlen($_POST['SQL_HOST']) > 255 ||
-        empty($_POST['SQL_USER']) ||
-        strlen($_POST['SQL_USER']) > 255 ||
-        empty($_POST['SQL_PASSWORD']) ||
-        strlen($_POST['SQL_PASSWORD']) > 255 ||
-        empty($_POST['SQL_DB']) ||
-        strlen($_POST['SQL_DB']) > 255 ||
-        empty($_POST['SQL_TABLE_PREFIX']) ||
-        strlen($_POST['SQL_TABLE_PREFIX']) > 50 ||
-        empty($_POST['ADMIN_PASS']) ||
-        strlen($_POST['ADMIN_PASS']) > 255 ||
-        empty($_POST['CRYPT_SALT']) ||
-        strlen($_POST['CRYPT_SALT']) != 22 ||
-        empty($_POST['HOME']) ||
-        strlen($_POST['HOME']) > 255 ||
-        empty($_POST['CACHE_PATH']) ||
-        strlen($_POST['CACHE_PATH']) > 255 ||
-        empty($_POST['ITEM_PER_PAGE']) ||
-        strlen($_POST['ITEM_PER_PAGE']) > 3 ||
-        (int) $_POST['ITEM_PER_PAGE'] > 100) $step = 2;
-
-else {
+if ($step == 2 &&
+    !empty($_POST['SITE_TITLE']) &&
+    strlen($_POST['SITE_TITLE']) >= 2 &&
+    strlen($_POST['SITE_TITLE']) <= 50 &&
+    !empty($_POST['SERVER_NAME']) &&
+    strlen($_POST['SERVER_NAME']) >= 4 &&
+    strlen($_POST['SERVER_NAME']) <= 255 &&
+    !empty($_POST['SQL_HOST']) &&
+    strlen($_POST['SQL_HOST']) <= 255 &&
+    !empty($_POST['SQL_USER']) &&
+    strlen($_POST['SQL_USER']) <= 255 &&
+    !empty($_POST['SQL_PASSWORD']) &&
+    strlen($_POST['SQL_PASSWORD']) <= 255 &&
+    !empty($_POST['SQL_DB']) &&
+    strlen($_POST['SQL_DB']) <= 255 &&
+    !empty($_POST['SQL_TABLE_PREFIX']) &&
+    strlen($_POST['SQL_TABLE_PREFIX']) <= 50 &&
+    !empty($_POST['ADMIN_PASS']) &&
+    strlen($_POST['ADMIN_PASS']) <= 255 &&
+    !empty($_POST['CRYPT_SALT']) &&
+    strlen($_POST['CRYPT_SALT']) == 22 &&
+    !empty($_POST['HOME']) &&
+    strlen($_POST['HOME']) <= 255 &&
+    !empty($_POST['CACHE_PATH']) &&
+    strlen($_POST['CACHE_PATH']) <= 255 &&
+    !empty($_POST['ITEM_PER_PAGE']) &&
+    strlen($_POST['ITEM_PER_PAGE']) <= 3 &&
+    (int) $_POST['ITEM_PER_PAGE'] <= 100) {
 
     $ADMIN_PASS_HASH = crypt($_POST['ADMIN_PASS'], '$2a$07$' . $_POST['CRYPT_SALT'] . '$');
 
@@ -73,16 +76,61 @@ else {
         'const CACHE_PATH = \'' . $_POST['CACHE_PATH'] . '\';' . "\n" .
         'const ITEM_PER_PAGE = ' . (int) $_POST['ITEM_PER_PAGE'] . ';')) {
 
-        if (new \mysqli(SQL_HOST, SQL_USER, SQL_PASSWORD, SQL_DB)) $step = 3;
-
+        header('Location: /install');
     }
-    else $step = 2;
+    else array_push($messages, 'Unable to create configuration file <tt>core/config.php</tt>');
+
 }
 
+if ($step == 2 && file_exists('core/config.php')) {
+    $dbObject = new \mysqli(SQL_HOST, SQL_USER, SQL_PASSWORD, SQL_DB);
 
-// /** @var string The Blowfish digest of admin password */
-// const ADMIN_PASS_HASH = '$2a$07$b1u7/Rmxm4Zv.4Ha024h8OapIOJCBUOuAudAWYbVUQ25m9VSLaxmy';
-// // Compute in php : crypt('anotherLongAndUniquePassword', '$2a$07$' . CRYPT_SALT . '$');
+    if ($dbObject->connect_error)
+        array_push($messages, $dbObject->connect_error);
+
+    else $step = 3;
+}
+
+if ($step == 3) {
+
+    $dbError = false;
+
+    $sql = $dbObject->query('SELECT COUNT(*) as n FROM `' . SQL_TABLE_PREFIX . 'authors`');
+
+    if ($sql === false || !empty($dbObject->error) || (int) $sql->fetch_object()->n < 1) $dbError = true;
+
+    $sql = $dbObject->query('SELECT COUNT(*) as n FROM `' . SQL_TABLE_PREFIX . 'marks`');
+
+    if ($sql === false || !empty($dbObject->error) || (int) $sql->fetch_object()->n < 1) $dbError = true;
+
+    $sql = $dbObject->query('SELECT COUNT(*) as n FROM `' . SQL_TABLE_PREFIX . 'origins`');
+
+    if ($sql === false || !empty($dbObject->error) || (int) $sql->fetch_object()->n < 1) $dbError = true;
+
+    $sql = $dbObject->query('SELECT COUNT(*) as n FROM `' . SQL_TABLE_PREFIX . 'quotes`');
+
+    if ($sql === false || !empty($dbObject->error) || (int) $sql->fetch_object()->n < 1) $dbError = true;
+
+    $sql = $dbObject->query('SELECT COUNT(*) as n FROM `' . SQL_TABLE_PREFIX . 'topics`');
+
+    if ($sql === false || !empty($dbObject->error) || (int) $sql->fetch_object()->n < 1) $dbError = true;
+
+    if ($dbError === false) $step = 4;
+    elseif (!empty($_POST['create-tables'])) {
+
+        $sqlQueries = explode(';', str_replace('`lq_', '`' . SQL_TABLE_PREFIX, file_get_contents('core/install.sql')));
+
+        foreach ($sqlQueries as $query) {
+            $sql = $dbObject->query($query);
+
+            if ($sql === false) {
+                array_push($messages, "Problem with sql query : “" . $query . "” (" . $this->dbObject->error . ")");
+
+                break;
+            }
+        }
+    }
+}
 
 ?><!doctype html>
 <html lang="en">
@@ -97,11 +145,14 @@ else {
   <body>
     <header>
       <div>
-        <h1 id="title"><? echo $SITE_TITLE; ?></h1>
+        <h1 id="title"><? echo SITE_TITLE; ?></h1>
       </div>
     </header>
     <main>
       <div>
+        <nav>
+          Report <a href="https://github.com/Talenka/libre-quotes/issues/new?labels=bug&amp;title=Problem+during+installation+process+step+<?php echo $step; ?>">bug</a><a href="https://github.com/Talenka/libre-quotes/issues">suggestion</a>
+        </nav>
         <h1>Hi fellow !</h1>
         <p>There is few steps left:</p>
         <ol>
@@ -123,14 +174,22 @@ else {
           <li style="font-weight:700">Create the <tt>core/config.php</tt> file</li>
           <li>Create database tables with some data</li>
           <li>Suppress the file <tt>install.php</tt> (Optionnal but recommended)</li>
-<?php } else { ?>
+<?php } elseif ($step == 3) { ?>
           <li style="color:green">Check that you have PHP 5 or later, and MySql 4.1 or later</li>
           <li style="color:green">Check that PHP have write permission on <tt>core</tt> and <tt>cache</tt> directories</li>
           <li style="color:green">Create the <tt>core/config.php</tt> file</li>
           <li style="font-weight:700">Create database tables with some data</li>
           <li>Suppress the file <tt>install.php</tt> (Optionnal but recommended)</li>
+<?php } else { ?>
+          <li style="color:green">Check that you have PHP 5 or later, and MySql 4.1 or later</li>
+          <li style="color:green">Check that PHP have write permission on <tt>core</tt> and <tt>cache</tt> directories</li>
+          <li style="color:green">Create the <tt>core/config.php</tt> file</li>
+          <li style="color:green">Create database tables with some data</li>
+          <li style="font-weight:700">Suppress this file <tt>install.php</tt> (Optionnal but recommended)</li>
 <?php } ?>
         </ol>
+
+<?php if (!empty($messages)) echo '<h3>Houston we have a problem:</h3><ul><li>', implode('</li><li>', $messages), '</li></ul>'; ?>
 
 <?php if ($step == 0) { ?>
         <h2>PHP and MySql installation</h2>
@@ -200,6 +259,21 @@ else {
 
           <input type="submit" value="Create core/config.php">
         </form>
+<?php } elseif ($step == 3) { ?>
+        <h2>Database initialization</h2>
+        <form action="install" method="post">
+          <input type="submit" name="create-tables" value="Create database tables">
+          <p>Or run manually these queries on your database:</p>
+          <textarea style="width:99%;height:500px">
+<?php echo str_replace('`lq_', '`' . SQL_TABLE_PREFIX, file_get_contents('core/install.sql')); ?>
+          </textarea>
+        </form>
+<?php } elseif ($step == 4) { ?>
+        <h2>Installation is complete</h2>
+        <p>You should check that everything work properly.
+        The <a href="/admin" target="_blank">administration panel</a> is here, you may want to bookmark it.
+        If an error happen, you can try to edit the configuration file <tt>core/config.php</tt>.</p>
+        <p>When you'll ready, you should delete this file <tt>install.php</tt>.</p>
 <?php } ?>
       </div>
     </main>
