@@ -16,7 +16,7 @@ class database
     public function __construct($dbObject)
     {
         if ($dbObject->connect_error)
-            throw new error('Unable to access database ! ' . $dbObject->connect_error);
+            throw new error($dbObject->connect_error, $dbObject->connect_errno);
 
         $this->dbObject = $dbObject;
     }
