@@ -1,7 +1,6 @@
 <?php
 /**
  * LibreQuotes / Assets / Atom feed
- * @todo suppress this page and make every controllers able to render Atom feeds as well as HTML (and JSON ?)
  */
 
 namespace LibreQuotes;
