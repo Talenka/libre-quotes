@@ -26,7 +26,7 @@ class error extends \Exception
              '<header><div><h1><a href="', HOME, '">', SITE_TITLE, '</a></h1></div></header>',
              '<main><div>';
 
-        if(DEBUG) {
+        if (DEBUG) {
 
             $githubLink = preg_replace('/^.+\/libre-quotes\//',
                                        'https://github.com/Talenka/libre-quotes/blob/master/',

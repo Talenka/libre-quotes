@@ -77,8 +77,7 @@ if ($step == 2 &&
         'const ITEM_PER_PAGE = ' . (int) $_POST['ITEM_PER_PAGE'] . ';')) {
 
         header('Location: /install');
-    }
-    else array_push($messages, 'Unable to create configuration file <tt>core/config.php</tt>');
+    } else array_push($messages, 'Unable to create configuration file <tt>core/config.php</tt>');
 
 }
 
@@ -145,7 +144,7 @@ if ($step == 3) {
   <body>
     <header>
       <div>
-        <h1 id="title"><? echo SITE_TITLE; ?></h1>
+        <h1 id="title"><?php echo SITE_TITLE; ?></h1>
       </div>
     </header>
     <main>
@@ -279,15 +278,18 @@ if ($step == 3) {
     </main>
     <script>
 
-function getById(id) {
+function getById(id)
+{
     return document.getElementById(id);
 }
 
-function updateTitle(t) {
+function updateTitle(t)
+{
     document.title = getById('title').innerHTML = t;
 }
 
-function generateSalt() {
+function generateSalt()
+{
     var characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./',
         salt = '',
         i;
@@ -297,7 +299,8 @@ function generateSalt() {
     getById('CRYPT_SALT').value = salt;
 }
 
-function updateItemPerPage() {
+function updateItemPerPage()
+{
     getById('_ITEM_PER_PAGE').innerHTML = getById('ITEM_PER_PAGE').value;
 }
 
