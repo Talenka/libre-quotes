@@ -9,7 +9,9 @@ require_once 'core/index.php';
 
 $search = new form('', 'get');
 
-$searchPhrase = empty($_GET['q']) ? URL_PARAMS : trim($_GET['q']);
+$searchPhrase = (substr($_SERVER['REQUEST_URI'], 0, 7) == '/search') ?
+                (empty($_GET['q']) ? URL_PARAMS : trim($_GET['q'])) :
+                substr($_SERVER['REQUEST_URI'], 1);
 
 $searchTypes = array('all', 'authors', 'quotes', 'topics');
 
