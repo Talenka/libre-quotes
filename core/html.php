@@ -256,7 +256,7 @@ class html
      */
     private function paginationItem($params, $label, $current = false)
     {
-        return $this->link(substr(PHP_FILE, 0, -4) . '?' . http_build_query($params, '', '&amp;'),
+        return $this->link(substr(PHP_FILE, 1, -4) . '?' . http_build_query($params, '', '&amp;'),
                            $label, $current ? 'class=a' : '');
     }
 
