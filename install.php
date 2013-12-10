@@ -190,7 +190,7 @@ if (!empty($messages))
     echo '<h3>Houston we have a problem:</h3><ul><li>',
          implode('</li><li>', $messages), '</li></ul>';
 
-if ($step == 0) 
+if ($step == 0)
     echo '<h2>PHP and MySql installation</h2>',
          '<p>To install/update your server, see <strong>',
          '<a href="http://www.php.net/manual/en/install.php" target=_blank>php.net/manual/en/install</a>',
