@@ -1,6 +1,11 @@
 .DS_Store
 .htaccess
 
+*.png
+*.ico
+*.svg
+*.xml
+
 *.sublime-*
 cache/
 core/config.php
