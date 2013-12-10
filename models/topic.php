@@ -43,8 +43,7 @@ class topic extends model
     {
         global $page;
 
-        if ($page->format == 'json') return $this->toJson();
-        return $page->link('topic?' . $this->slug, $this->getName());
+        return ($page->format == 'json') ? $this->toJson() : $page->link('topic?' . $this->slug, $this->getName());
     }
 
     /**

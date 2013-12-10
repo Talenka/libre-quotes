@@ -77,8 +77,8 @@ class quote extends model
     {
         global $page;
 
-        if ($page->format == 'json') return $this->toJson();
-        return '<q>' . $page->link('quote?' . $this->id, $this->getText()) .
+        return ($page->format == 'json') ? $this->toJson() :
+               '<q>' . $page->link('quote?' . $this->id, $this->getText()) .
                '<cite>' . $this->author->toString() . '</cite></q>';
     }
 
