@@ -13,8 +13,8 @@ if ($style === false) {
 
     $style = file_get_contents('views/style.css');
 
-    $style = str_replace(array("\n", '    ', ': ', ';}', '> ', ' >', ', ', 'white', 'black', 'bold'),
-                         array('', '', ':', '}', '>', '>', ',', '#fff', '#000', '800'),
+    $style = str_replace(array("\n", '    ', ': ', ';}', '> ', ' >', ', ', 'black', 'bold'),
+                         array('', '', ':', '}', '>', '>', ',', '#000', '800'),
                          $style);
 
     $page->cache('', $style);

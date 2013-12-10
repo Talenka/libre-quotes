@@ -23,17 +23,17 @@ if (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE) {
     $connectForm = new form('admin', 'post', 60);
 
     $connectForm->addPasswordInput('password', 'Type the password here', 255,
-                                   false, 'required autofocus class="large stick-right"')
-                ->addSubmitButton('Connect', 'class=stick-left');
+                                   false, 'required autofocus class="big to-right"')
+                ->addSubmitButton('Connect', 'class=to-left');
 
     if ($connectForm->isKeyValid()) {
 
         if (form::blowfishDisgest($_POST['password']) == ADMIN_PASS_HASH) {
             setcookie('lqAdmin', ADMIN_COOKIE, NOW + ONE_HOUR, '/', SERVER_NAME, true, true);
 
-            $page->redirectTo('admin?notice=' . urlencode(L('You are successfully connected')));
+            $page->redirectTo('admin?info=' . urlencode(L('You are successfully connected')));
 
-        } else $page->addContent('<p class=notice>' . L('Error: wrong password') . '</p>');
+        } else $page->addContent('<p class=info>' . L('Error: wrong password') . '</p>');
     }
 
     $page->addContent($connectForm->render());
@@ -46,7 +46,7 @@ if (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE) {
 
     if (ACTION == 'dashboard') {
 
-        if (!empty($_GET['notice'])) $page->addContent('<p class=notice>' . urldecode($_GET['notice']). '</p>');
+        if (!empty($_GET['info'])) $page->addContent('<p class=info>' . urldecode($_GET['info']). '</p>');
 
         $newQuotes = quote::sqlToArray($db->select(quote::DB . ' q, ' . author::DB . ' a, ' . origin::DB . ' o',
                            'q.*, a.slugName, a.fullName, a.quotesNumber, o.name, o.type, o.url',
@@ -90,7 +90,7 @@ if (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE) {
 
         $db->update(quote::DB, 'status = "published"', 'quoteId=' . $id);
 
-        $page->redirectTo('admin?notice=' . urlencode(L('Quote') . ' #' . $id . ' ' . L('was published')));
+        $page->redirectTo('admin?info=' . urlencode(L('Quote') . ' #' . $id . ' ' . L('was published')));
 
     } elseif (ACTION == 'edit-quote' && !empty($_GET['id'])) {
 
@@ -106,7 +106,7 @@ if (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE) {
 
         $db->update(quote::DB, 'status = "refused"', 'quoteId=' . $id);
 
-        $page->redirectTo('admin?notice=' . urlencode(L('Quote') . ' #' . $id . ' ' . L('was refused')));
+        $page->redirectTo('admin?info=' . urlencode(L('Quote') . ' #' . $id . ' ' . L('was refused')));
 
     } elseif (ACTION == 'purge-cache' && !empty($_GET['file'])) {
 
@@ -115,11 +115,11 @@ if (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE) {
         if (file_exists(CACHE_PATH . '/' . $file) && is_file(CACHE_PATH . '/' . $file)) {
 
             if (unlink(CACHE_PATH . '/' . $file))
-                $page->redirectTo('admin?notice=' . urlencode(L('Cache successfully purged')));
+                $page->redirectTo('admin?info=' . urlencode(L('Cache successfully purged')));
 
-            else $page->redirectTo('admin?notice=' . urlencode(L('Error: cached content not purged')));
+            else $page->redirectTo('admin?info=' . urlencode(L('Error: cached content not purged')));
 
-        } else $page->redirectTo('admin?notice=' . urlencode(L('File does not exists')));
+        } else $page->redirectTo('admin?info=' . urlencode(L('File does not exists')));
     } elseif (ACTION == 'see-cache' && !empty($_GET['file'])) {
 
         $file = $_GET['file'];
@@ -133,7 +133,7 @@ if (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE) {
                                            ENT_QUOTES, 'UTF-8') .
                               '</pre>');
 
-        else $page->redirectTo('admin?notice=' . urlencode(L('File does not exists')));
+        else $page->redirectTo('admin?info=' . urlencode(L('File does not exists')));
     }
 }
 

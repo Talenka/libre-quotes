@@ -48,8 +48,8 @@ if (!empty($searchPhrase)) {
 
 $search->addTextInput('q', L('What are you looking for?'), 255,
                       empty($searchPhrase) ? false : $searchPhrase,
-                      'required autofocus class="large stick-right"')
-       ->addSubmitButton(L('Search'), 'class=stick-left')
+                      'required autofocus class="big to-right"')
+       ->addSubmitButton(L('Search'), 'class=to-left')
        ->addSelect('type', '',
                    empty($_GET['type']) ? false : $_GET['type'],
                    array('all' => L('All'),

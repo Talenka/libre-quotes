@@ -14,8 +14,8 @@ if ($theQuote) {
     $addTopicForm = new form('quote?' . $theQuote->id);
 
     $addTopicForm->addTextInput('name', 'New topic', topic::NAME_MAXLENGTH, false,
-                                'required autofocus class=stick-right list=famousTopics style="width:120px"')
-                 ->addSubmitButton('Add', 'class=stick-left');
+                                'required autofocus class=to-right list=famousTopics style="width:120px"')
+                 ->addSubmitButton('Add', 'class=to-left');
 
     if ($addTopicForm->isKeyValid()) {
 

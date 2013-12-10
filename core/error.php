@@ -54,7 +54,7 @@ class error extends \Exception
 
             echo '<p>', L('Technical details'), ': ',
                  $this->message, ' (', $this->code, ')</p>',
-                 '<p style="font-size:.9em">', $where,'</p>';
+                 '<p style="font-size:90%">', $where,'</p>';
         }
 
         echo '</div></main>';

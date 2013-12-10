@@ -14,8 +14,8 @@ $languagesOptions = array();
 foreach ($definedLanguages as $code => $name) $languagesOptions[$code] = L($name);
 
 $submitForm->addTextInput('text', 'Type the quote here', quote::TEXT_MAXLENGTH, false,
-                          'required autofocus class="large stick-right"')
-           ->addSubmitButton('Submit', 'class=stick-left')
+                          'required autofocus class="big to-right"')
+           ->addSubmitButton('Submit', 'class=to-left')
            ->addTextInput('author', 'Author', author::NAME_MAXLENGTH,
                           empty($_POST['author']) ? false : $_POST['author'], 'list=famousAuthors')
            ->addTextInput('origin', 'Origin', origin::NAME_MAXLENGTH,
@@ -63,7 +63,7 @@ if ($submitForm->isKeyValid()) {
 $page->setTitle(L('Submit a new quote'));
 
 if (isset($submissionSuccess) && $submissionSuccess === true)
-    $page->addContent('<p class="notice success">' .
+    $page->addContent('<p class="info ok">' .
                       L('Your quote have been successfully submitted and is waiting for moderation.') . '</p>');
 
 $page->addContent($submitForm->render())
