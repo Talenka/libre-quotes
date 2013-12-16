@@ -1,14 +1,24 @@
+# Images
+*.ico
+*.jpg
+*.png
+*.svg
+
+# SublimeText files
+*.sublime-*
+
+# Documentation (since it is available online)
+doc/
+
+# Hidden files
 .DS_Store
 .htaccess
 
-*.png
-*.ico
-*.svg
+# RSS/Atom Feeds
 *.xml
 
-*.sublime-*
+# Google webmaster file
+google*
+
 cache/
 core/config.php
-doc/
-
-google*
