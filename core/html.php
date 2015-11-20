@@ -96,7 +96,7 @@ class html
      */
     public function link($url, $title, $attributes = '')
     {
-        return '<a href="' . $url . '"' . (empty($attributes) ? '' : ' ' . $attributes) . '>' . $title . '</a>';
+        return '<a href=' . $url . (empty($attributes) ? '' : ' ' . $attributes) . '>' . $title . '</a>';
     }
 
     /**
