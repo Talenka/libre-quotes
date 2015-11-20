@@ -34,6 +34,13 @@ if (!empty($searchPhrase)) {
         $quotesResults = quote::get('q.text LIKE "%' . $db->escapeString($searchPhrase) . '%"',
                                     ITEM_PER_PAGE, 'submissionDate DESC');
 
+        // Highlight the searched text in the quote
+        foreach ($quotesResults as $key => $value) {
+          $quotesResults[$key]->text = str_ireplace($searchPhrase,
+                                                    '<b class=ok>' . $searchPhrase . '</b>',
+                                                    $quotesResults[$key]->text);
+        }
+
         $searchResults = array_merge($searchResults, $quotesResults);
     }
 
