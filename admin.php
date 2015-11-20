@@ -9,9 +9,12 @@ require_once 'core/index.php';
 
 define('ADMIN_COOKIE', form::blowfishDisgest(date('YmdH') . $_SERVER['REMOTE_ADDR']));
 
+// To bypass password protection
+define('ADMIN_OPEN', false);
+
 // Page protected by password (access valid one hour max)
 
-if (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE) {
+if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE)) {
     $page->setTitle('Connection');
 
     if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on')
