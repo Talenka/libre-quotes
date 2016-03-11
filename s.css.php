@@ -24,6 +24,7 @@ if ($style === false) {
 } else header('Last-Modified: ' . date('r', filemtime('views/style.css')));
 
 $page->setExpiration(ONE_WEEK);
+
 header('Content-Type: text/css; charset=UTF-8');
 
 echo $style;
