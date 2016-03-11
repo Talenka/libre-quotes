@@ -195,7 +195,7 @@ class form
      */
     public function sanitizeSlug($slug)
     {
-        $slug = mb_convert_case($slug, MB_CASE_LOWER, "UTF-8");
+        $slug = mb_convert_case($slug, MB_CASE_LOWER, 'UTF-8');
 
         $slug = str_replace(array('æ', 'œ', 'ß'),
                             array('ae', 'oe', 'ss'), $slug);

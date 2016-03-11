@@ -13,19 +13,21 @@ class html
     /** @var string */
     private $content = '';
 
-    /** @var string[] */
+    /** @var string[] HTML code for navigation items */
     private $navigation = array();
 
-    /** @var string */
+    /** @var string HTML code for pagination menu */
     private $pagination = '';
 
-    /** @var integer */
+    /** @var integer If paginated content, the selected page */
     private $paginationCurrentPage = 1;
 
+    /** @var string Output format type */
     public $format = 'html';
 
     public function __construct()
     {
+        /** @var string[] */
         $menu = array('topics' => L('Topics'),
                       'authors' => L('Authors'),
                       'topics' => L('Topics'),
@@ -120,9 +122,11 @@ class html
     {
         global $lang;
 
+        // We set the correct mime-type and charset depending on chosen format
         if ($this->format == 'json') header('Content-Type: application/json; charset=UTF-8');
         else header('Content-Type: text/html; charset=UTF-8');
 
+        /** @var string[] List of special tags replacement plus line-feed */
         $replacements = array('{pageTitle}' => $this->title,
                               '{siteTitle}' => SITE_TITLE,
                               '{mainNavigation}' => $this->buildNavigation(),
@@ -131,8 +135,8 @@ class html
                               '{lang}' => $lang,
                               "\n" => '');
 
+        // We choose the basic layout depending on chosen format
         if ($this->format == 'json') $output = file_get_contents('views/pageLayout.json');
-
         else $output = file_get_contents('views/pageLayout.html');
 
         $output = str_replace(array_keys($replacements), array_values($replacements), $output);
@@ -172,6 +176,7 @@ class html
      */
     public function redirectTo($url, $statusCode = 200)
     {
+        /** @var string[] List of HTTP status codes */
         $statusCodes = array(
             301 => '301 Moved Permanently',
             307 => '307 Temporary Redirect',
@@ -185,7 +190,7 @@ class html
         if (isset($statusCodes[$statusCode]))
             header('Status: ' . $statusCodes[$statusCode], false, $statusCode);
 
-        if ($statusCode == 301) header('Location: ' . $url, false);
+        if ($statusCode == 301 || $statusCode == 307) header('Location: ' . $url, false);
 
         else echo '<!doctype html><script>window.location="' . $url . '";</script>',
                   L('If nothing happen, '),
@@ -302,6 +307,7 @@ class html
     }
 
     /**
+     * Add pagination HTML code
      * @param  string            $itemsNumber
      * @return \LibreQuotes\html
      */
