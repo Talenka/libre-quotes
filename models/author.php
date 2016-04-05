@@ -25,6 +25,9 @@ class author extends model
     /** @var integer smallint(4) UNSIGNED */
     public $quotesNumber = 0;
 
+    /** @var string */
+    public $url;
+
     /**
      * @param \mysqli_result $data
      */
@@ -34,16 +37,17 @@ class author extends model
         $this->slugName = $data->slugName;
         $this->fullName = $data->fullName;
         $this->quotesNumber = empty($data->quotesNumber) ? 0 : (int) $data->quotesNumber;
+        $this->url = 'author?' . $this->slugName;
     }
 
     /**
      * @return string
      */
-    public function toString()
+    public function toHtml()
     {
         global $page;
 
-        return ($page->format == 'json') ? $this->toJson() : $page->link('author?' . $this->slugName, $this->getName());
+        return $page->link($this->url, $this->getName());
     }
 
     /**
@@ -53,9 +57,9 @@ class author extends model
     {
         return '<item>' .
                '<title>' . $this->getName() . '</title>' .
-               '<guid isPermaLink="false">http://' . SERVER_NAME . '/author?' . $this->getSlug() . '</guid>' .
-               '<link>http://' . SERVER_NAME . '/author?' . $this->getSlug() . '</link>' .
-               '<category domain="http://' . SERVER_NAME . '/">' . SITE_TITLE . '</category>' .
+               '<guid isPermaLink="false">' . BASE_URL . $this->url . '</guid>' .
+               '<link>' . BASE_URL . $this->url . '</link>' .
+               '<category domain="' . BASE_URL . '">' . SITE_TITLE . '</category>' .
                '<description><![CDATA[' . $this->getName() . ']]></description>' .
                '</item>';
     }
@@ -67,7 +71,7 @@ class author extends model
     {
         return '{"name":"' . $this->getName() . '",' .
                '"quotesNumber":' . $this->quotesNumber . ',' .
-               '"url":"http://' . SERVER_NAME .'/author?name=' . $this->getSlug() . '&format=json"}';
+               '"url":"' . BASE_URL . 'author?name=' . $this->getSlug() . '&format=json"}';
     }
 
     /**
