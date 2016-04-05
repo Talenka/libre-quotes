@@ -5,13 +5,13 @@
 
 namespace LibreQuotes;
 
-class model
+abstract class model
 {
     /**
      * @param  object[] $items
      * @return string[]
      */
-    public function toStrings($items)
+    final public function toStrings($items)
     {
         for ($i = 0, $j = sizeof($items); $i < $j; $i++) $items[$i] = $items[$i]->toString();
 
@@ -22,7 +22,7 @@ class model
      * @param  \mysqli_result
      * @return \LibreQuotes\model[]
      */
-    public function sqlToArray($sql, $obj = '')
+    final public function sqlToArray($sql, $obj = '')
     {
         $result = array();
 
@@ -33,5 +33,29 @@ class model
         $sql->free();
 
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    final public function toString()
+    {
+        global $page;
+
+        return ($page->format == 'json') ? $this->toJson() : $this->toHtml();
+    }
+
+    /**
+     * @return string
+     */
+    public function toJson() {
+        return '{}';
+    }
+
+    /**
+     * @return string
+     */
+    public function toHtml() {
+        return '';
     }
 }
