@@ -43,6 +43,9 @@ class quote extends model
     /** @var integer int(10) UNIX_TIMESTAMP */
     public $submissionDate;
 
+    /** @var string */
+    public $url;
+
     /**
      * @param  \mysqli_result     $data
      * @return \LibreQuotes\quote
@@ -58,6 +61,7 @@ class quote extends model
         $this->lang = $data->lang;
         $this->status = $data->status;
         $this->submissionDate = (int) $data->submissionDate;
+        $this->url = 'quote?' . $this->id;
 
         return $this;
     }
@@ -73,12 +77,11 @@ class quote extends model
     /**
      * @return string
      */
-    public function toString()
+    public function toHtml()
     {
         global $page;
 
-        return ($page->format == 'json') ? $this->toJson() :
-               '<q>' . $page->link('quote?' . $this->id, $this->getText()) .
+        return '<q>' . $page->link($this->url, $this->getText()) .
                '<cite>' . $this->author->toString() . '</cite></q>';
     }
 
@@ -89,10 +92,10 @@ class quote extends model
     {
         return '<item>' .
                '<title>' . $this->getText() . '</title>' .
-               '<guid isPermaLink="false">http://' . SERVER_NAME . '/quote?' . $this->id . '</guid>' .
-               '<link>http://' . SERVER_NAME . '/quote?' . $this->id . '</link>' .
+               '<guid isPermaLink="false">' . BASE_URL . $this->url . '</guid>' .
+               '<link>' . BASE_URL . $this->url . '</link>' .
                '<pubDate>' . date('r', $this->submissionDate) . '</pubDate>' .
-               '<category domain="http://' . SERVER_NAME . '/">' . SITE_TITLE . '</category>' .
+               '<category domain="' . BASE_URL . '">' . SITE_TITLE . '</category>' .
                '<description><![CDATA[' . $this->author->getName() . ']]></description>' .
                '</item>';
     }
@@ -107,7 +110,7 @@ class quote extends model
         for ($i = 0, $j = sizeof($t); $i < $j; $i++) $t[$i] = $t[$i]->toJson();
 
         return '{"id":' . $this->id . ',' .
-               '"url":"http://' . SERVER_NAME . '/quote?id=' . $this->id . '&format=json",' .
+               '"url":"' . BASE_URL . 'quote?id=' . $this->id . '&format=json",' .
                '"text":"' . $this->getText() . '",' .
                '"author":' . $this->author->toJson() . ',' .
                '"origin":' . $this->origin->toJson() . ',' .
@@ -124,8 +127,9 @@ class quote extends model
         global $page;
 
         if ($page->format == 'json') return $this->toJson();
+
         return '<blockquote>' .
-               '<p>' . $page->link('quote?' . $this->id, $this->getText()) . '</p>' .
+               '<p>' . $page->link($this->url, $this->getText()) . '</p>' .
                '<cite>' . $this->author->toString() .
                (($this->origin->name == 'Unknown') ? '' : ' ' . $this->origin->toString()) .
                '</cite>' .
