@@ -16,10 +16,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>',
      'xmlns:atom="http://www.w3.org/2005/Atom">',
      '<channel>',
      '<title>' . SITE_TITLE . '</title>',
-     '<link>http://' . SERVER_NAME . '/</link>',
+     '<link>' . BASE_URL . '</link>',
      '<description>' . L('Tons of inspiring thoughs') . '</description>',
      '<language>' . $lang . '</language>',
-     '<atom:link href="http://' . SERVER_NAME . '/feed" rel="self" type="application/rss+xml" />';
+     '<atom:link href="' . BASE_URL . 'feed" rel="self" type="application/rss+xml" />';
 
 $newest = quote::get('', ITEM_PER_PAGE);
 
