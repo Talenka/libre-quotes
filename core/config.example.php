@@ -34,8 +34,8 @@ const SQL_TABLE_PREFIX = 'lq_';
 const ADMIN_PASS_HASH = '$2a$07$b1u7/Rmxm4Zv.4Ha024h8OapIOJCBUOuAudAWYbVUQ25m9VSLaxmy';
 // Compute in php : crypt('anotherLongAndUniquePassword', '$2a$07$' . CRYPT_SALT . '$');
 
-/** @var string The canonical domain name */
-const SERVER_NAME = 'libre-quotes.boudah.pl';
+/** @var string The canonical protocol and domain name of the site, ending by a slash */
+const BASE_URL = 'http://libre-quotes.boudah.pl/';
 
 /** @var string home page url */
 const HOME = '/';
