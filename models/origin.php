@@ -39,11 +39,9 @@ class origin extends model
     /**
      * @return string
      */
-    public function toString()
+    public function toHtml()
     {
         global $page;
-
-        if ($page->format == 'json') return $this->toJson();
 
         $name = $this->getName();
 
