@@ -41,7 +41,7 @@ echo '<', '?xml version="1.0" encoding="UTF-8"?', '>',
 
 foreach ($sitemap as $params) {
 
-    echo '<url><loc>http://' . SERVER_NAME . '/', $params['url'], '</loc>',
+    echo '<url><loc>', BASE_URL, $params['url'], '</loc>',
          '<lastmod>', date('Y-m-d', $params['lastmod']), '</lastmod>',
          '<priority>', $params['priority'], '</priority></url>';
 
