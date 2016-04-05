@@ -25,6 +25,9 @@ class topic extends model
     /** @var integer smallint(4) UNSIGNED */
     public $quotesNumber;
 
+    /** @var string */
+    public $url;
+
     /**
      * @param \mysqli_result $data
      */
@@ -34,16 +37,17 @@ class topic extends model
         $this->name = $data->name;
         $this->slug = $data->slug;
         $this->quotesNumber = $data->quotesNumber;
+        $this->url = 'topic?' . $this->slug;
     }
 
     /**
      * @return string
      */
-    public function toString()
+    public function toHtml()
     {
         global $page;
 
-        return ($page->format == 'json') ? $this->toJson() : $page->link('topic?' . $this->slug, $this->getName());
+        return $page->link($this->url, $this->getName());
     }
 
     /**
@@ -53,7 +57,7 @@ class topic extends model
     {
         return '{"name":"' . $this->getName() . '",' .
                '"quotesNumber":' . $this->quotesNumber . ',' .
-               '"url":"http://' . SERVER_NAME .'/topic?name=' . $this->getSlug() . '&format=json"}';
+               '"url":"' . BASE_URL . 'topic?name=' . $this->getSlug() . '&format=json"}';
     }
 
     /**
@@ -106,8 +110,11 @@ class topic extends model
 
         $sql = $db->select(mark::DB . ' m, ' . quote::DB . ' q, ' . author::DB . ' a, ' . origin::DB . ' o',
                            'q.*, a.slugName, a.fullName, a.quotesNumber, o.name, o.type, o.url',
-                           'm.topicId=' . $this->id . ' AND m.quoteId = q.quoteId AND ' .
-                           'q.status="published" AND q.authorId = a.authorId AND q.originId = o.originId',
+                           'm.topicId=' . $this->id . ' AND ' .
+                           'm.quoteId = q.quoteId AND ' .
+                           'q.status="published" AND ' .
+                           'q.authorId = a.authorId AND ' .
+                           'q.originId = o.originId',
                            ($limits == '') ? ITEM_PER_PAGE : $limits, 'q.submissionDate DESC');
 
         return self::sqlToArray($sql, '\LibreQuotes\quote');
