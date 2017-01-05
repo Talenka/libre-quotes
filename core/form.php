@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-class form
+class Form
 {
     /** @var string */
     private $url;
@@ -31,7 +31,9 @@ class form
      */
     public function __construct($url = '', $sendMethod = 'post', $term = 600)
     {
-        if (empty($url)) $url = substr(PHP_FILE, 1, -4);
+        if (empty($url)) {
+            $url = substr(PHP_FILE, 1, -4);
+        }
 
         $this->url = $url;
         $this->html = '';
@@ -45,7 +47,7 @@ class form
      * @param  integer           $maxlength
      * @param  (string|false)    $value
      * @param  string            $attributes
-     * @return \LibreQuotes\form
+     * @return \LibreQuotes\Form
      */
     public function addPasswordInput($name, $label, $maxlength, $value = false, $attributes = '')
     {
@@ -64,7 +66,7 @@ class form
      * @param  (string|false)    $value
      * @param  string[]          $options
      * @param  string            $attributes
-     * @return \LibreQuotes\form
+     * @return \LibreQuotes\Form
      */
     public function addSelect($name, $label = '', $value = false, $options = array(), $attributes = '')
     {
@@ -85,7 +87,7 @@ class form
     /**
      * @param  string            $label
      * @param  string            $attributes
-     * @return \LibreQuotes\form
+     * @return \LibreQuotes\Form
      */
     public function addSubmitButton($label = 'Submit', $attributes = '')
     {
@@ -101,7 +103,7 @@ class form
      * @param  integer           $maxlength
      * @param  (string|false)    $value
      * @param  string            $attributes
-     * @return \LibreQuotes\form
+     * @return \LibreQuotes\Form
      */
     public function addTextInput($name, $label, $maxlength, $value = false, $attributes = '')
     {
@@ -124,14 +126,14 @@ class form
     }
 
     /**
-     * @param  integer $i
+     * @param  integer $value
      * @param  integer $minimum
      * @param  integer $maximum
      * @return integer
      */
-    public function clampInt($i, $minimum, $maximum)
+    public function clampInt($value, $minimum, $maximum)
     {
-        return min(max($minimum, (int) $i), $maximum);
+        return min(max($minimum, (int) $value), $maximum);
     }
 
     /**
@@ -166,15 +168,15 @@ class form
      */
     public function isKeyValid()
     {
-        if (empty($_POST['formKey'])) return false;
-        else {
-
-            list($expire, $hash) = explode('O', $_POST['formKey']);
-
-            $expire = base_convert($expire, 36, 10);
-
-            return ($expire > NOW && $this->hashText($expire) === $hash);
+        if (empty($_POST['formKey'])) {
+            return false;
         }
+
+        list($expire, $hash) = explode('O', $_POST['formKey']);
+
+        $expire = base_convert($expire, 36, 10);
+
+        return ($expire > NOW && $this->hashText($expire) === $hash);
     }
 
     /**
@@ -184,7 +186,10 @@ class form
     {
         global $page;
 
-        if ($page->format == 'json') return '';
+        if ($page->format === 'json') {
+            return '';
+        }
+
         return '<form action=' . $this->url .' method=' . $this->sendMethod . '>' .
                $this->html . $this->generateKey() . '</form>';
     }
@@ -197,20 +202,25 @@ class form
     {
         $slug = mb_convert_case($slug, MB_CASE_LOWER, 'UTF-8');
 
-        $slug = str_replace(array('æ', 'œ', 'ß'),
-                            array('ae', 'oe', 'ss'), $slug);
+        $slug = str_replace(
+            array('æ', 'œ', 'ß'),
+            array('ae', 'oe', 'ss'),
+            $slug
+        );
 
-        $slug = strtr(utf8_decode($slug),
-                      utf8_decode(' éèêëåàâäãáùûüúòôöõøìîïÿñ®π€¥ωƒﬁµ@©ç–_'),
-                      '-eeeeaaaaaauuuuoooooiiiynrpeyofhmacc--');
+        $slug = strtr(
+            utf8_decode($slug),
+            utf8_decode(' éèêëåàâäãáùûüúòôöõøìîïÿñ®π€¥ωƒﬁµ@©ç–_'),
+            '-eeeeaaaaaauuuuoooooiiiynrpeyofhmacc--'
+        );
 
         return preg_replace('/[^a-z\-]/', '', $slug);
     }
 
     /**
-     * @param string  $text
-     * @param integer $maxlength
-     * @param string defaultName
+     * @param  string  $text
+     * @param  integer $maxlength
+     * @param  string  $defaultText
      * @return string
      */
     public function sanitizeText($text, $maxlength, $defaultText = '')
@@ -218,7 +228,10 @@ class form
         $text = mb_substr(trim(stripslashes($text)), 0, $maxlength, 'UTF-8');
         $text = mb_convert_encoding($text, 'ISO-8859-1', 'utf-8');
 
-        if (empty($text) || mb_strlen($text) < 2) $text = $defaultText;
+        if (empty($text) || mb_strlen($text) < 2) {
+            $text = $defaultText;
+        }
+
         return $text;
     }
 }

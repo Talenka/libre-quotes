@@ -5,14 +5,14 @@
 
 namespace LibreQuotes;
 
-class error extends \Exception
+class Error extends \Exception
 {
     /**
      * @param string           $message
      * @param integer          $code
      * @param \Exception|error $previous
      */
-    public function __construct($message = '', $code = 0, $previous = NULL)
+    public function __construct($message = '', $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
@@ -28,9 +28,11 @@ class error extends \Exception
 
         if (DEBUG) {
 
-            $githubLink = preg_replace('/^.+\/libre-quotes\//',
-                                       'https://github.com/Talenka/libre-quotes/blob/master/',
-                                       $this->file) . '#L' . $this->line;
+            $githubLink = preg_replace(
+                '/^.+\/libre-quotes\//',
+                'https://github.com/Talenka/libre-quotes/blob/master/',
+                $this->file
+            ) . '#L' . $this->line;
 
             $fileName = preg_replace('/^.+\/libre-quotes\//', '', $this->file) ;
 
@@ -41,7 +43,10 @@ class error extends \Exception
                        urlencode($where .' from <a href="https://github.com/Talenka/libre-quotes/blob/master' .
                                  $_SERVER['PHP_SELF'] . '">' . $_SERVER['PHP_SELF'] . '</a>');
 
-            echo '<nav><a href="javascript:history.go(-1)">◀</a><a href="' . $bugLink . '" target=_blank>Report the error</a></nav>';
+            echo '<nav>' .
+                 '<a href="javascript:history.go(-1)">◀</a>' .
+                 '<a href="' . $bugLink . '" target=_blank>Report the error</a>' .
+                 '</nav>';
         }
 
         echo '<h1>', L('Oups, something wrong happen!'), '</h1>',
