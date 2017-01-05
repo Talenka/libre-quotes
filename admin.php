@@ -7,7 +7,7 @@ namespace LibreQuotes;
 
 require_once 'core/index.php';
 
-define('ADMIN_COOKIE', form::blowfishDisgest(date('YmdH') . $_SERVER['REMOTE_ADDR']));
+define('ADMIN_COOKIE', Form::blowfishDisgest(date('YmdH') . $_SERVER['REMOTE_ADDR']));
 
 // To bypass password protection
 define('ADMIN_OPEN', false);
@@ -17,8 +17,9 @@ define('ADMIN_OPEN', false);
 if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_COOKIE)) {
     $page->setTitle('Connection');
 
-    if (CRYPT_BLOWFISH != 1)
+    if (CRYPT_BLOWFISH != 1) {
         throw new Error("bcrypt not supported. See http://php.net/crypt");
+    }
 
     $connectForm = new form('admin', 'post', 60);
 
@@ -28,7 +29,7 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
 
     if ($connectForm->isKeyValid()) {
 
-        if (form::blowfishDisgest($_POST['password']) == ADMIN_PASS_HASH) {
+        if (Form::blowfishDisgest($_POST['password']) == ADMIN_PASS_HASH) {
             setcookie('lqAdmin', ADMIN_COOKIE, NOW + ONE_HOUR, '/');
 
             $page->redirectTo('admin?info=' . urlencode(L('You are successfully connected')));
@@ -86,7 +87,7 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
 
     } elseif (ACTION == 'publish-quote' && !empty($_GET['id'])) {
 
-        $id = form::clampInt($_GET['id'], 1, quote::ID_MAX);
+        $id = Form::clampInt($_GET['id'], 1, quote::ID_MAX);
 
         $db->update(quote::DB, 'status = "published"', 'quoteId=' . $id);
 
@@ -94,7 +95,7 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
 
     } elseif (ACTION == 'edit-quote' && !empty($_GET['id'])) {
 
-        $id = form::clampInt($_GET['id'], 1, quote::ID_MAX);
+        $id = Form::clampInt($_GET['id'], 1, quote::ID_MAX);
 
         /**
          * @todo implement
@@ -102,7 +103,7 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
 
     } elseif (ACTION == 'delete-quote' && !empty($_GET['id'])) {
 
-        $id = form::clampInt($_GET['id'], 1, quote::ID_MAX);
+        $id = Form::clampInt($_GET['id'], 1, quote::ID_MAX);
 
         $db->update(quote::DB, 'status = "refused"', 'quoteId=' . $id);
 

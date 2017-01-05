@@ -23,7 +23,7 @@ $searchResults = array();
 if (!empty($searchPhrase)) {
     if ($searchType == 'authors' || $searchType == 'all') {
 
-        $authorsResults = author::get('slugName LIKE "%' . form::sanitizeSlug($searchPhrase) . '%"',
+        $authorsResults = author::get('slugName LIKE "%' . Form::sanitizeSlug($searchPhrase) . '%"',
                                       ITEM_PER_PAGE, 'quotesNumber DESC');
 
         $searchResults = array_merge($searchResults, $authorsResults);
@@ -46,7 +46,7 @@ if (!empty($searchPhrase)) {
 
     if ($searchType == 'topics' || $searchType == 'all') {
 
-        $topicsResults = topic::get('slug LIKE "%' . form::sanitizeSlug($searchPhrase) . '%"',
+        $topicsResults = topic::get('slug LIKE "%' . Form::sanitizeSlug($searchPhrase) . '%"',
                                       ITEM_PER_PAGE, 'quotesNumber DESC');
 
         $searchResults = array_merge($searchResults, $topicsResults);

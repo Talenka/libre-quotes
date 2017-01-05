@@ -83,7 +83,7 @@ class topic extends model
      */
     public function getBySlug($slug)
     {
-        $result = self::get('slug="' . form::sanitizeSlug($slug) . '"', 1);
+        $result = self::get('slug="' . Form::sanitizeSlug($slug) . '"', 1);
 
         return (sizeof($result) === 1) ? $result[0] : false;
     }
