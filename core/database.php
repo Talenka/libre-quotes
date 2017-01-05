@@ -44,12 +44,12 @@ class Database
 
         if ($result === false) {
             throw new error("Problem with sql query : “" . $query . "” (" . $this->dbObject->error . ")");
-        } else {
 
-            $this->insert_id = $this->dbObject->insert_id;
-
-            return $result;
         }
+
+        $this->insert_id = $this->dbObject->insert_id;
+
+        return $result;
     }
 
     /**

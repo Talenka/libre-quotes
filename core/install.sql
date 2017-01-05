@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `lq_topics` (
   `name` varchar(30) NOT NULL,
   `slug` varchar(30) NOT NULL,
   `quotesNumber` smallint(4) unsigned NOT NULL DEFAULT '0',
+  `lang` char(2) NOT NULL DEFAULT 'en',
   PRIMARY KEY (`topicId`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
 

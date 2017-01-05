@@ -25,6 +25,9 @@ class topic extends model
     /** @var integer smallint(4) UNSIGNED */
     public $quotesNumber;
 
+    /** @var string char(2) */
+    public $lang;
+
     /** @var string */
     public $url;
 
@@ -37,6 +40,7 @@ class topic extends model
         $this->name = $data->name;
         $this->slug = $data->slug;
         $this->quotesNumber = $data->quotesNumber;
+        $this->lang = $data->lang;
         $this->url = 'topic?' . $this->slug;
     }
 
