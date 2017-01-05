@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-class database
+class Database
 {
     /** @var \mysqli */
     private $dbObject;
@@ -15,8 +15,9 @@ class database
      */
     public function __construct($dbObject)
     {
-        if ($dbObject->connect_error)
+        if ($dbObject->connect_error) {
             throw new error($dbObject->connect_error, $dbObject->connect_errno);
+        }
 
         $this->dbObject = $dbObject;
     }
@@ -41,10 +42,9 @@ class database
     {
         $result = $this->dbObject->query($query);
 
-        if ($result === false)
+        if ($result === false) {
             throw new error("Problem with sql query : “" . $query . "” (" . $this->dbObject->error . ")");
-
-        else {
+        } else {
 
             $this->insert_id = $this->dbObject->insert_id;
 
