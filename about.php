@@ -20,13 +20,17 @@ if (!$page->renderFromCache(ONE_WEEK)) {
                       '<a href="https://gnu.org/licenses/gpl.html">GNU/GPL</a> on ' .
                       '<a href="https://github.com/Talenka/libre-quotes/">GitHub</a>. ' .
                       '</p>')
-         ->addSection(L('Who is behind'),
-                      '<p>Just me, <a href="http://boudah.pl">Boudah Talenka</a>, doing this in my spare time.</p>')
-         ->addSection(L('Under the hood'),
-                      '<p>' . SITE_TITLE . ' is baked with love on ' .
-                      '<a href="https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29">LAMP</a> using ' .
-                      '<a href="http://www.sublimetext.com">SublimeText</a>, ' .
-                      '<a href="https://filezilla-project.org/">Filezilla</a> and ' .
-                      '<a href="https://www.mozilla.org/fr/firefox/new/">Firefox</a>.</p>')
+         ->addSection(
+             L('Who is behind'),
+             '<p>Just me, <a href="https://boudah.pl">Boudah Talenka</a>, doing this in my spare time.</p>'
+         )
+         ->addSection(
+             L('Under the hood'),
+             '<p>' . SITE_TITLE . ' is baked with love on ' .
+             '<a href="https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29">LAMP</a> using ' .
+             '<a href="https://www.sublimetext.com">SublimeText</a>, ' .
+             '<a href="https://filezilla-project.org/">Filezilla</a> and ' .
+             '<a href="https://www.mozilla.org/fr/firefox/new/">Firefox</a>.</p>'
+         )
          ->cacheWholePage(ONE_WEEK);
 }

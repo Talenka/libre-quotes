@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-class origin extends model
+class Origin extends Model
 {
     /** @var string */
     const DB = 'lq_origins';
@@ -45,7 +45,10 @@ class origin extends model
 
         $name = $this->getName();
 
-        if (!empty($this->type) && $this->type != 'miscellaneous') $name .= ' (' . L($this->type) . ')';
+        if (!empty($this->type) && $this->type != 'miscellaneous') {
+            $name .= ' (' . L($this->type) . ')';
+        }
+
         return '<em>in</em> ' . (empty($this->url) ? $name : $page->link($this->url, $name, 'target=_blank'));
     }
 
@@ -63,13 +66,13 @@ class origin extends model
      * @param  string                $where
      * @param  (integer|string)      $limit
      * @param  string                $order
-     * @return \LibreQuotes\origin[]
+     * @return \LibreQuotes\Origin[]
      */
     public function get($where = '', $limit = 1, $order = 'name DESC')
     {
         global $db;
 
-        return self::sqlToArray($db->select(origin::DB, '*', $where, $limit, $order));
+        return self::sqlToArray($db->select(Origin::DB, '*', $where, $limit, $order));
     }
 
     /**
@@ -87,13 +90,16 @@ class origin extends model
     {
         global $page;
 
-        if ($page->format == 'json') return '';
+        if ($page->format == 'json') {
+            return '';
+        }
 
         $data = self::get('', 200);
 
-        foreach ($data as $k => $a)
+        foreach ($data as $k => $a) {
             $data[$k] = '<option value="' . utf8_encode($a->name) . '">' .
                         (($a->getName() != utf8_encode($a->name)) ? $a->getName() . '</option>' : '');
+        }
 
         return '<datalist id=famousOrigins>' . implode('', $data) . '</datalist>';
     }

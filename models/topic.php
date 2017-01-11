@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-class topic extends model
+class Topic extends Model
 {
     /** @var string */
     const DB = 'lq_topics';
@@ -112,14 +112,17 @@ class topic extends model
     {
         global $db;
 
-        $sql = $db->select(mark::DB . ' m, ' . quote::DB . ' q, ' . author::DB . ' a, ' . origin::DB . ' o',
-                           'q.*, a.slugName, a.fullName, a.quotesNumber, o.name, o.type, o.url',
-                           'm.topicId=' . $this->id . ' AND ' .
-                           'm.quoteId = q.quoteId AND ' .
-                           'q.status="published" AND ' .
-                           'q.authorId = a.authorId AND ' .
-                           'q.originId = o.originId',
-                           ($limits == '') ? ITEM_PER_PAGE : $limits, 'q.submissionDate DESC');
+        $sql = $db->select(
+            mark::DB . ' m, ' . quote::DB . ' q, ' . author::DB . ' a, ' . origin::DB . ' o',
+            'q.*, a.slugName, a.fullName, a.quotesNumber, o.name, o.type, o.url',
+            'm.topicId=' . $this->id . ' AND ' .
+            'm.quoteId = q.quoteId AND ' .
+            'q.status="published" AND ' .
+            'q.authorId = a.authorId AND ' .
+            'q.originId = o.originId',
+            ($limits == '') ? ITEM_PER_PAGE : $limits,
+            'q.submissionDate DESC'
+        );
 
         return self::sqlToArray($sql, '\LibreQuotes\quote');
     }
@@ -131,13 +134,16 @@ class topic extends model
     {
         global $page;
 
-        if ($page->format == 'json') return '';
+        if ($page->format == 'json') {
+            return '';
+        }
 
         $data = self::get('', 200, 'quotesNumber DESC');
 
-        foreach ($data as $k => $t)
+        foreach ($data as $k => $t) {
             $data[$k] = '<option value="' . utf8_encode($t->name) . '">' .
                         (($t->getName() != utf8_encode($t->name)) ? $t->getName() . '</option>' : '');
+        }
 
         return '<datalist id=famousTopics>' . implode('', $data) . '</datalist>';
     }

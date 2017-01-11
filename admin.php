@@ -21,11 +21,16 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
         throw new Error("bcrypt not supported. See http://php.net/crypt");
     }
 
-    $connectForm = new form('admin', 'post', 60);
+    $connectForm = new Form('admin', 'post', 60);
 
-    $connectForm->addPasswordInput('password', 'Type the password here', 255,
-                                   false, 'required autofocus class="big to-right"')
-                ->addSubmitButton('Connect', 'class=to-left');
+    $connectForm->addPasswordInput(
+        'password',
+        'Type the password here',
+        255,
+        false,
+        'required autofocus class="big to-right"'
+    )
+    ->addSubmitButton('Connect', 'class=to-left');
 
     if ($connectForm->isKeyValid()) {
 
@@ -34,7 +39,9 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
 
             $page->redirectTo('admin?info=' . urlencode(L('You are successfully connected')));
 
-        } else $page->addContent('<p class=info>' . L('Error: wrong password') . '</p>');
+        } else {
+            $page->addContent('<p class=info>' . L('Error: wrong password') . '</p>');
+        }
     }
 
     $page->addContent($connectForm->render());
@@ -47,21 +54,27 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
 
     if (ACTION == 'dashboard') {
 
-        if (!empty($_GET['info'])) $page->addContent('<p class=info>' . urldecode($_GET['info']). '</p>');
+        if (!empty($_GET['info'])) {
+            $page->addContent('<p class=info>' . urldecode($_GET['info']). '</p>');
+        }
 
-        $newQuotes = quote::sqlToArray($db->select(quote::DB . ' q, ' . author::DB . ' a, ' . origin::DB . ' o',
-                           'q.*, a.slugName, a.fullName, a.quotesNumber, o.name, o.type, o.url',
-                           'q.status="submitted" AND q.authorId = a.authorId AND q.originId = o.originId',
-                           ITEM_PER_PAGE, 'q.submissionDate DESC'));
+        $newQuotes = quote::sqlToArray($db->select(
+            quote::DB . ' q, ' . author::DB . ' a, ' . origin::DB . ' o',
+            'q.*, a.slugName, a.fullName, a.quotesNumber, o.name, o.type, o.url',
+            'q.status="submitted" AND q.authorId = a.authorId AND q.originId = o.originId',
+            ITEM_PER_PAGE,
+            'q.submissionDate DESC'
+        ));
 
         if (sizeof($newQuotes) > 0) {
 
-            foreach ($newQuotes as $k => $q)
+            foreach ($newQuotes as $k => $q) {
                 $newQuotes[$k] = '<nav>' .
                                  $page->link('admin?action=delete-quote&amp;id=' . $q->id, L('Delete')) .
                                  $page->link('admin?action=edit-quote&amp;id=' . $q->id, L('Edit')) .
                                  $page->link('admin?action=publish-quote&amp;id=' . $q->id, L('Publish')) .
                                  '</nav>' . $q->toString();
+            }
 
             $page->addSection(L('Newest quotes'), $page->ulist($newQuotes));
         }
@@ -72,14 +85,19 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
 
         $cacheList = scandir(CACHE_PATH);
 
-        foreach ($cacheList as $k => $f) if (is_file(CACHE_PATH . '/' . $f)) {
-            $cacheList[$k] = $f . ' (' . round(filesize(CACHE_PATH . '/' . $f) / 1000, 1) . ' Ko)' .
-                             '<nav>' .
-                             $page->link('admin?action=see-cache&amp;file=' . urlencode($f), L('See')) .
-                             $page->link('admin?action=purge-cache&amp;file=' . urlencode($f), L('Purge')) .
-                             '</nav>';
+        foreach ($cacheList as $k => $f) {
 
-        } else unset($cacheList[$k]);
+            if (is_file(CACHE_PATH . '/' . $f)) {
+                $cacheList[$k] = $f . ' (' . round(filesize(CACHE_PATH . '/' . $f) / 1000, 1) . ' Ko)' .
+                                 '<nav>' .
+                                 $page->link('admin?action=see-cache&amp;file=' . urlencode($f), L('See')) .
+                                 $page->link('admin?action=purge-cache&amp;file=' . urlencode($f), L('Purge')) .
+                                 '</nav>';
+
+            } else {
+                unset($cacheList[$k]);
+            }
+        }
 
         $page->addSection(L('Cached contents'), $page->ulist($cacheList));
 
@@ -115,26 +133,34 @@ if (!ADMIN_OPEN && (empty($_COOKIE['lqAdmin']) || $_COOKIE['lqAdmin'] != ADMIN_C
 
         if (file_exists(CACHE_PATH . '/' . $file) && is_file(CACHE_PATH . '/' . $file)) {
 
-            if (unlink(CACHE_PATH . '/' . $file))
+            if (unlink(CACHE_PATH . '/' . $file)) {
                 $page->redirectTo('admin?info=' . urlencode(L('Cache successfully purged')));
 
-            else $page->redirectTo('admin?info=' . urlencode(L('Error: cached content not purged')));
+            } else {
+                $page->redirectTo('admin?info=' . urlencode(L('Error: cached content not purged')));
+            }
 
-        } else $page->redirectTo('admin?info=' . urlencode(L('File does not exists')));
-    } elseif (ACTION == 'see-cache' && !empty($_GET['file'])) {
+        } else {
+            $page->redirectTo('admin?info=' . urlencode(L('File does not exists')));
+        }
+
+    } elseif (ACTION === 'see-cache' && !empty($_GET['file'])) {
 
         $file = $_GET['file'];
 
-        if (file_exists(CACHE_PATH . '/' . $file) && is_file(CACHE_PATH . '/' . $file))
+        if (file_exists(CACHE_PATH . '/' . $file) && is_file(CACHE_PATH . '/' . $file)) {
 
-            $page->addSection(L('Cached contents') . ' ' . $file,
-                              '<pre style="background:#fff;border:1px #ccc solid;padding:4px;width:100%;' .
-                              'word-wrap:break-word;display:block;white-space:pre-wrap">' .
-                              htmlentities(file_get_contents(CACHE_PATH . '/' . $file),
-                                           ENT_QUOTES, 'UTF-8') .
-                              '</pre>');
+            $page->addSection(
+                L('Cached contents') . ' ' . $file,
+                '<pre style="background:#fff;border:1px #ccc solid;padding:4px;width:100%;' .
+                'word-wrap:break-word;display:block;white-space:pre-wrap">' .
+                htmlentities(file_get_contents(CACHE_PATH . '/' . $file), ENT_QUOTES, 'UTF-8') .
+                '</pre>'
+            );
 
-        else $page->redirectTo('admin?info=' . urlencode(L('File does not exists')));
+        } else {
+            $page->redirectTo('admin?info=' . urlencode(L('File does not exists')));
+        }
     }
 }
 

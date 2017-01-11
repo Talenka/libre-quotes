@@ -7,9 +7,9 @@ namespace LibreQuotes;
 
 require_once 'core/index.php';
 
-$Topic = topic::getBySlug(empty($_GET['name']) ? URL_PARAMS : $_GET['name']);
+$Topic = Topic::getBySlug(empty($_GET['name']) ? URL_PARAMS : $_GET['name']);
 
-if ($Topic)
+if ($Topic) {
 
     $page->setTitle($Topic->quotesNumber . ' ' . L('quotes about') . ' ' . $Topic->getName())
          ->paginate($Topic->quotesNumber, array('name' => $Topic->getSlug()))
@@ -17,4 +17,6 @@ if ($Topic)
          ->setExpiration(ONE_DAY)
          ->render();
 
-else $page->notFound();
+} else {
+    $page->notFound();
+}

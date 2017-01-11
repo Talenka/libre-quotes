@@ -19,9 +19,11 @@ if ($stats === false) {
 
     $authorsNumber = $db->selectCount(author::DB);
 
-    $stats = $page->cache('stats',
-                          '<strong>' . $quotesNumber . '</strong> ' . L('quotes from') . ' ' .
-                          '<strong>' . $authorsNumber . '</strong> ' . L('Authors'));
+    $stats = $page->cache(
+        'stats',
+        '<strong>' . $quotesNumber . '</strong> ' . L('quotes from') . ' ' .
+        '<strong>' . $authorsNumber . '</strong> ' . L('Authors')
+    );
 }
 
 if ($quoteOfTheDay === false) {
@@ -34,7 +36,9 @@ if ($quoteOfTheDay === false) {
 
 $newest = $page->getFromCache('newest', ONE_HOUR);
 
-if ($newest === false) $newest = $page->cache('newest', $page->ulist(quote::get('', 10)));
+if ($newest === false) {
+    $newest = $page->cache('newest', $page->ulist(quote::get('', 10)));
+}
 
 $page->setTitle(L('Tons of inspiring thoughs'))
      ->addContent($stats)

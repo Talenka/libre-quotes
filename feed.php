@@ -23,6 +23,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>',
 
 $newest = quote::get('', ITEM_PER_PAGE);
 
-foreach ($newest as $q) echo $q->toAtom();
+foreach ($newest as $q) {
+    echo $q->toAtom();
+}
 
 echo '</channel></rss>';

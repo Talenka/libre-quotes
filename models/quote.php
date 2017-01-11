@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-class quote extends model
+class Quote extends Model
 {
     /** @var string */
     const DB = 'lq_quotes';
@@ -107,7 +107,9 @@ class quote extends model
     {
         $t = $this->getTopics();
 
-        for ($i = 0, $j = sizeof($t); $i < $j; $i++) $t[$i] = $t[$i]->toJson();
+        for ($i = 0, $j = sizeof($t); $i < $j; $i++) {
+            $t[$i] = $t[$i]->toJson();
+        }
 
         return '{"id":' . $this->id . ',' .
                '"url":"' . BASE_URL . 'quote?id=' . $this->id . '&format=json",' .
@@ -126,7 +128,9 @@ class quote extends model
     {
         global $page;
 
-        if ($page->format == 'json') return $this->toJson();
+        if ($page->format == 'json') {
+            return $this->toJson();
+        }
 
         return '<blockquote>' .
                '<p>' . $page->link($this->url, $this->getText()) . '</p>' .
@@ -146,11 +150,14 @@ class quote extends model
     {
         global $db;
 
-        $sql = $db->select(quote::DB . ' q, ' . author::DB . ' a, ' . origin::DB . ' o',
-                           'q.*, a.slugName, a.fullName, a.quotesNumber, o.name, o.type, o.url',
-                           (empty($where) ? '' : $where . ' AND ') .
-                           'q.status="published" AND q.authorId = a.authorId AND q.originId = o.originId',
-                           $limit, $order);
+        $sql = $db->select(
+            quote::DB . ' q, ' . author::DB . ' a, ' . origin::DB . ' o',
+            'q.*, a.slugName, a.fullName, a.quotesNumber, o.name, o.type, o.url',
+            (empty($where) ? '' : $where . ' AND ') .
+            'q.status="published" AND q.authorId = a.authorId AND q.originId = o.originId',
+            $limit,
+            $order
+        );
 
         return self::sqlToArray($sql);
     }
@@ -161,7 +168,7 @@ class quote extends model
      */
     public function getById($id = 0)
     {
-        $result = self::get('q.quoteId=' . form::clampInt($id, 1, self::ID_MAX), 1);
+        $result = self::get('q.quoteId=' . Form::clampInt($id, 1, self::ID_MAX), 1);
 
         return (sizeof($result) === 1) ? $result[0] : false;
     }
@@ -173,9 +180,13 @@ class quote extends model
     {
         global $db;
 
-        $sql = $db->select(mark::DB . ' m, ' . topic::DB . ' t', 't.*',
-                    'm.quoteId=' . $this->id . ' AND m.topicId = t.topicId',
-                    100, 't.quotesNumber DESC');
+        $sql = $db->select(
+            mark::DB . ' m, ' . Topic::DB . ' t',
+            't.*',
+            'm.quoteId=' . $this->id . ' AND m.topicId = t.topicId',
+            100,
+            't.quotesNumber DESC'
+        );
 
         return self::sqlToArray($sql, '\LibreQuotes\topic');
     }

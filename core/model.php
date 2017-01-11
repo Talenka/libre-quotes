@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-abstract class model
+abstract class Model
 {
     /**
      * @param  object[] $items
@@ -13,7 +13,9 @@ abstract class model
      */
     final public function toStrings($items)
     {
-        for ($i = 0, $j = sizeof($items); $i < $j; $i++) $items[$i] = $items[$i]->toString();
+        for ($i = 0, $j = sizeof($items); $i < $j; $i++) {
+            $items[$i] = $items[$i]->toString();
+        }
 
         return $items;
     }
@@ -26,9 +28,13 @@ abstract class model
     {
         $result = array();
 
-        if ($obj == '') $obj = get_called_class();
+        if ($obj == '') {
+            $obj = get_called_class();
+        }
 
-        while ($q = $sql->fetch_object()) array_push($result, new $obj($q));
+        while ($q = $sql->fetch_object()) {
+            array_push($result, new $obj($q));
+        }
 
         $sql->free();
 
@@ -48,14 +54,16 @@ abstract class model
     /**
      * @return string
      */
-    public function toJson() {
+    public function toJson()
+    {
         return '{}';
     }
 
     /**
      * @return string
      */
-    public function toHtml() {
+    public function toHtml()
+    {
         return '';
     }
 }

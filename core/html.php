@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-class html
+class Html
 {
     /** @var string */
     private $title = '';
@@ -25,7 +25,10 @@ class html
     /** @var string Output format type */
     public $format = 'html';
 
-    public function __construct()
+    /**
+     * @param string $format
+     */
+    public function __construct($format = 'html')
     {
         /** @var string[] */
         $menu = array('topics' => L('Topics'),
@@ -37,11 +40,13 @@ class html
                       'about' => L('About'),
                       'submit' => L('Submit'));
 
-        foreach ($menu as $url => $name)
-            if (strpos(PHP_FILE, $url) === false)
+        foreach ($menu as $url => $name) {
+            if (strpos(PHP_FILE, $url) === false) {
                 array_push($this->navigation, "<a href=$url>$name</a>");
+            }
+        }
 
-        if (!empty($_GET['format'])) $this->format = $_GET['format'];
+        $this->format = empty($format) ? 'html' : $format;
     }
 
     /**
@@ -235,7 +240,7 @@ class html
 
     public function notFound()
     {
-        $this->redirectTo('search?q=' . urlencode(URL_PARAMS), 404);
+        $this->redirectTo('search?q=' . urlencode(URL_PARAMS), NOT_FOUND);
     }
 
     /**
@@ -310,7 +315,7 @@ class html
 
         if ($maxPage == 1) return $this;
 
-        $currentPage = empty($_GET['page']) ? 1 : form::clampInt($_GET['page'], 1, $maxPage);
+        $currentPage = empty($_GET['page']) ? 1 : Form::clampInt($_GET['page'], 1, $maxPage);
 
         $this->paginationCurrentPage = $currentPage;
 
@@ -382,7 +387,7 @@ class html
     {
         $this->setExpiration($expires);
 
-        $cacheContent = $this->getFromCache(form::sanitizeSlug($params));
+        $cacheContent = $this->getFromCache(Form::sanitizeSlug($params));
 
         if ($cacheContent !== false) {
             header('Content-Type: text/html; charset=UTF-8');
@@ -401,6 +406,6 @@ class html
     {
         $this->setExpiration($expires);
 
-        $this->cache(form::sanitizeSlug($params), $this->render());
+        $this->cache(Form::sanitizeSlug($params), $this->render());
     }
 }

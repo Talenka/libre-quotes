@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-class author extends model
+class Author extends Model
 {
     /** @var string */
     const DB = 'lq_authors';
@@ -80,7 +80,7 @@ class author extends model
      */
     public function getBySlug($slug)
     {
-        $result = self::get('slugName="' . form::sanitizeSlug($slug) . '"', 1);
+        $result = self::get('slugName="' . Form::sanitizeSlug($slug) . '"', 1);
 
         return (sizeof($result) === 1) ? $result[0] : false;
     }
@@ -95,7 +95,7 @@ class author extends model
     {
         global $db;
 
-        return self::sqlToArray($db->select(author::DB, '*', $where, $limit, $order));
+        return self::sqlToArray($db->select(self::DB, '*', $where, $limit, $order));
     }
 
     /**
@@ -121,13 +121,16 @@ class author extends model
     {
         global $page;
 
-        if ($page->format == 'json') return '';
+        if ($page->format === 'json') {
+            return '';
+        }
 
         $data = self::get('', 200, 'quotesNumber DESC');
 
-        foreach ($data as $k => $a)
+        foreach ($data as $k => $a) {
             $data[$k] = '<option value="' . utf8_encode($a->fullName) . '">' .
                         (($a->getName() != utf8_encode($a->fullName)) ? $a->getName() . '</option>' : '');
+        }
 
         return '<datalist id=famousAuthors>' . implode('', $data) . '</datalist>';
     }

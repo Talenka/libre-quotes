@@ -61,5 +61,5 @@ $lang = 'en';
 
 defineClientLanguage();
 
-$page = new html();
+$page = new Html($_GET['format']);
 $db = new database(new \mysqli(SQL_HOST, SQL_USER, SQL_PASSWORD, SQL_DB));

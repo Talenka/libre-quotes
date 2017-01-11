@@ -5,7 +5,7 @@
 
 namespace LibreQuotes;
 
-class mark extends model
+class Mark extends Model
 {
     /** @var string */
     const DB = 'lq_marks';

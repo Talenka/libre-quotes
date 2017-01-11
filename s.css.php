@@ -13,15 +13,19 @@ if ($style === false) {
 
     $style = file_get_contents('views/style.css');
 
-    $style = str_replace(array("\n", '    ', ': ', ';}', '> ', ' >', ', ', 'black', 'bold'),
-                         array('', '', ':', '}', '>', '>', ',', '#000', '800'),
-                         $style);
+    $style = str_replace(
+        array("\n", '    ', ': ', ';}', '> ', ' >', ', ', 'black', 'bold'),
+        array('', '', ':', '}', '>', '>', ',', '#000', '800'),
+        $style
+    );
 
     $page->cache('', $style);
 
     header('Last-Modified: ' . date('r'));
 
-} else header('Last-Modified: ' . date('r', filemtime('views/style.css')));
+} else {
+    header('Last-Modified: ' . date('r', filemtime('views/style.css')));
+}
 
 $page->setExpiration(ONE_WEEK);
 
